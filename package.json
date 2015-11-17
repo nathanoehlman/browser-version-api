@@ -1,6 +1,6 @@
 {
   "name": "browser-version-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Expose browser versions and download links as a service",
   "main": "index.js",
   "scripts": {
