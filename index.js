@@ -6,6 +6,17 @@ var server = new restify.createServer({
     name: pkg.name,
     version: pkg.version,
     formatters: {
+        // Default to JSON
+        'text/html': function(req, res, body, cb) {
+            var value = JSON.stringify(body);
+            res.writeHead(200, {
+                'Content-Length': Buffer.byteLength(value),
+                'Content-Type': 'application/json'
+            });
+            res.write(value);
+            res.end();
+            return cb();
+        },
         'text/csv': function(req, res, body, cb) {
             if (body instanceof Error) {
                 return body.stack;
