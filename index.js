@@ -6,32 +6,17 @@ var server = new restify.createServer({
     name: pkg.name,
     version: pkg.version,
     formatters: {
-        // Default to JSON
-        'text/html': function(req, res, body, cb) {
-            var value = JSON.stringify(body);
-            res.writeHead(200, {
-                'Content-Length': Buffer.byteLength(value),
-                'Content-Type': 'application/json'
-            });
-            res.write(value);
-            res.end();
-            return cb();
-        },
-        'text/csv': function(req, res, body, cb) {
+        'text/csv; q=0.2': function(req, res, body, cb) {
             if (body instanceof Error) {
                 return body.stack;
             }
 
-            var value = Object.keys(body).map(function(k) {
+            var data = Object.keys(body).map(function(k) {
                 return body[k];
             }).join(',');
-            res.writeHead(200, {
-              'Content-Length': Buffer.byteLength(value),
-              'Content-Type': 'text/csv'
-            });
-            res.write(value);
-            res.end();
-            return cb();
+            res.setHeader('Content-Length', Buffer.byteLength(data));
+            res.setHeader('Content-Type', 'text/csv');
+            return cb(null, data);
         }
     }
 });
@@ -51,6 +36,7 @@ server.get('/', function(req, res) {
 function discover(req, res, next) {
     versioner(req.params, function(err, info) {
         if (err) return next(err);
+        if (!info) res.send(404);
         return res.send(info);
     });
 }
