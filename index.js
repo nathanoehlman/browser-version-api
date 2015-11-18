@@ -1,3 +1,6 @@
+// Enable New Relic by setting an environment variable for it
+if (process.env.NEW_RELIC_LICENSE_KEY) require('newrelic');
+
 var restify = require('restify');
 var pkg = require('./package.json');
 var versioner = require('./lib/versioner');
