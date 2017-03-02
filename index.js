@@ -1,7 +1,14 @@
 // Enable New Relic by setting an environment variable for it
 if (process.env.NEW_RELIC_LICENSE_KEY) require('newrelic');
+var rollbar = null;
+if (process.env.ROLLBAR_ACCESS_TOKEN) {
+    rollbar = require('rollbar');
+    rollbar.init(process.env.ROLLBAR_ACCESS_TOKEN, {
+        endpoint: process.env.ROLLBAR_ENDPOINT
+    });
+}
 
-var rollbar = require('rollbar');
+
 var restify = require('restify');
 var pkg = require('./package.json');
 var versioner = require('./lib/versioner');
@@ -48,9 +55,10 @@ function discover(req, res, next) {
 server.get('/:platform/:browser/:channel', discover);
 server.get('/:platform/:browser/:channel/:lang', discover);
 
-if (process.env.ROLLBAR_ACCESS_TOKEN) {
-    server.use(rollbar.errorHandler(process.env.ROLLBAR_ACCESS_TOKEN));
-}
+server.on('uncaughtException', function(req, res, route, err) {
+    res.send(err);
+    if (rollbar) rollbar.handleError(err, req);
+});
 
 var port = process.env.PORT || 4654;
 server.listen(port, function(err) {
