@@ -13,6 +13,7 @@
     "async": "^1.5.0",
     "browser-sleuth": "^0.2.5",
     "newrelic": "^1.23.1",
-    "restify": "^4.0.3"
+    "restify": "^4.0.3",
+    "rollbar": "^0.6.3"
   }
 }

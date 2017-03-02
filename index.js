@@ -1,6 +1,7 @@
 // Enable New Relic by setting an environment variable for it
 if (process.env.NEW_RELIC_LICENSE_KEY) require('newrelic');
 
+var rollbar = require('rollbar');
 var restify = require('restify');
 var pkg = require('./package.json');
 var versioner = require('./lib/versioner');
@@ -46,6 +47,10 @@ function discover(req, res, next) {
 
 server.get('/:platform/:browser/:channel', discover);
 server.get('/:platform/:browser/:channel/:lang', discover);
+
+if (process.env.ROLLBAR_KEY) {
+    server.use(rollbar.errorHandler(process.env.ROLLBAR_KEY));
+}
 
 var port = process.env.PORT || 4654;
 server.listen(port, function(err) {
