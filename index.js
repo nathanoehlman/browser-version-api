@@ -48,8 +48,8 @@ function discover(req, res, next) {
 server.get('/:platform/:browser/:channel', discover);
 server.get('/:platform/:browser/:channel/:lang', discover);
 
-if (process.env.ROLLBAR_KEY) {
-    server.use(rollbar.errorHandler(process.env.ROLLBAR_KEY));
+if (process.env.ROLLBAR_ACCESS_TOKEN) {
+    server.use(rollbar.errorHandler(process.env.ROLLBAR_ACCESS_TOKEN));
 }
 
 var port = process.env.PORT || 4654;
