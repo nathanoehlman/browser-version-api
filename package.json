@@ -4,6 +4,7 @@
   "description": "Expose browser versions and download links as a service",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "mocha test"
   },
   "author": "Nathan Oehlman",
